@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{% load humanize %}
+
+{% block body %}
+    <h2 class="font-medium p-4 ml-3">Watchlist Items For User: {{active_user}}</h2>
+
+    <div class="max-w-screen-xl mx-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 m-auto">
+
+        {% for watchlist_item in watchlist_obj %}
+        <a href="{% url 'listing' watchlist_item.item.id %}">
+            <div class="bg-stone-100 rounded-xl overflow-hidden shadow-md">
+
+                <img class="object-cover w-full h-48" src="{{ watchlist_item.item.image.url }}" alt="{{ watchlist_item.item.name }} Image">
+
+                <div class="p-6">
+
+                    <!-- Card content goes here -->
+                    <h2 class="font-bold text-xl">{{ watchlist_item.item.name }}</h2>
+                    <p class="text-sm text-gray-700 mb-2">{{ watchlist_item.item.price|floatformat:2|intcomma }}</p>
+                    <p class="text-gray-700">{{ watchlist_item.item.description }}</p>
+                    
+                    <div>
+                        <p class="text-xs text-gray-700 mt-2">Created by: {{ watchlist_item.item.created_by }}</p>
+                        <p class="text-xs text-gray-700">Created at: {{ watchlist_item.item.created_at }}</p>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </a>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

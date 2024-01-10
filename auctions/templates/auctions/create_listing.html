@@ -1,0 +1,29 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div class="flex justify-center items-center h-screen">
+    <div class="bg-stone-100 p-6 rounded-md shadow-md w-96">
+        <h2 class="text-center font-medium text-xl mb-8">Create New Listing</h2>
+
+        <form action="{% url 'create_listing' %}" method="post" class="grid gap-4" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="text-gray-700">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 mt-8">
+                Create Listing
+            </button>
+        </form>
+        <div>
+            {{error_message}}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

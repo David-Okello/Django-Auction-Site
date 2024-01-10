@@ -1,0 +1,178 @@
+{% extends "auctions/layout.html" %}
+
+{% load humanize %}
+
+{% block stat %}
+{% load static %}
+{% endblock %}
+
+{% block body %}
+    <h2 class="flex justify-center items-center text-xl font-medium p-4 ml-3">{{listing.name}}</h2>
+
+    {% if winner %}
+    <p class="flex justify-center items-center font-medium text-orange-900" >
+        🎉Yaaayyy!!! You have won the bid!!🎉
+    </p>
+    {% endif %}
+
+    <div class="flex justify-evenly">
+
+            <div class="bg-stone-100 rounded-xl overflow-hidden shadow-md">
+
+                <img class="object-cover w-full h-96" src="{{ listing.image.url }}" alt="{{ listing.name }} Image">
+
+                <div class="p-6">
+
+                    <!-- Card content goes here -->
+                    <h2 class="font-bold text-xl">{{ listing.name }}</h2>
+                    <p class="text-sm text-gray-700 mb-2">{{ listing.price|floatformat:2|intcomma }}</p>
+                    <p class="text-gray-700">{{ listing.description }}</p>
+                    
+                    <div>
+                        <p class="text-xs text-gray-700 mt-2">Created by: {{ listing.created_by }}</p>
+                        <p class="text-xs text-gray-700">Created at: {{ listing.created_at }}</p>
+                        <p class="text-xs text-gray-700">Category: {{ listing.category }}</p>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="bg-stone-100 p-6 rounded-md shadow-md m-3">
+                <h2 class="flex justify-center items-center font-medium text-xl mb-20 mt-20">Place a Bid!</h2>
+
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    {{ bid_form }}
+
+                    <div class="flex justify-center items-center">                        
+                        <button type="submit"
+                            class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800">
+                            Place Bid
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-sm w-72 mt-9 pt-9 ml-3 mr-3 text-red-800">
+                    Warning: <br>
+                    Any attempt to place a bid lower than the Items price will automatically be processed as the item price. 
+                    eg: A bid of 5 KES placed on an item of 19,000,000 will be processed and saved as a bid of 19,000,000 (the minimum.)
+                </div>
+
+            </div>
+            {% else %}
+            <div class="bg-stone-100 p-6 rounded-md shadow-md m-3">
+                <h2 class="flex justify-center items-center font-medium text-xl mb-20 mt-20">Log in to Bid!</h2>
+
+                    <div class="flex justify-center items-center">   
+                    
+                        <a href="{% url 'login' %}"
+                            class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800">
+                            Log In
+                        </a>
+                    
+                    </div>
+               
+
+                <div class="text-sm w-72 mt-9 pt-9 ml-3 mr-3 text-red-800">
+                    Warning: <br>
+                    Any attempt to place a bid lower than the Items price will automatically be processed as the item price. 
+                    eg: A bid of 5 KES placed on an item of 19,000,000 will be processed and saved as a bid of 19,000,000 (the minimum.)
+                </div>
+
+            </div>
+            {% endif %}
+                               
+            
+
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="flex m-3 p-3 justify-center items-center">
+
+        <form action="{% url 'watchlist' %}" name="addwatchlist_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">                   
+            <button type="submit"
+                name="add_button"
+                class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 m-3">
+                Add to Watchlist
+            </button>
+        </form>
+
+        <form action="{% url 'watchlist' %}" name="removewatchlist_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <button type="submit"
+                name="remove_button"
+                class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 m-3">
+                Remove From Watchlist
+            </button>
+        </form>
+
+        {% if can_close %}
+        <form action="#" name="close_listing_form" method="post">
+            {% csrf_token %}
+            <button type="submit"
+                name="close_listing_button"
+                class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 m-3">
+                Close Listing
+            </button>
+        </form>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+    <div>
+        <h2 class="font-medium p-4 ml-3">Comments</h2>
+        {% for comment in listing_comments %}
+        <div class="bg-stone-100 rounded-xl overflow-hidden shadow-md p-4 mb-4 ml-7 w-1/2">
+            <div class="flex ">
+                <img class="rounded-full h-10" src={% static "auctions/anonymous.png" %} alt="anonymous">
+                <div class="ml-1">
+                    <p class="font-bold text-sm">{{ comment.created_by }}</p>
+                    <p class="text-xs text-gray-700">{{ comment.created_at|date:"F d, Y H:i:s" }}</p>
+                </div>
+            </div>
+            <p class="text-sm font-medium">{{ comment.title }}</p>
+            <p class="text-gray-700 text-sm">{{ comment.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+            <div class="bg-stone-100 p-6 rounded-md shadow-md m-3">
+                <h2 class="flex justify-center items-center font-medium text-xl mb-20 mt-20">Add a comment</h2>
+
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    {{ comment_form }}
+
+                    <div class="flex justify-center items-center">                        
+                        <button type="submit"
+                            class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800">
+                            Post Comment
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+            {% else %}
+            <div class="bg-stone-100 p-6 rounded-md shadow-md m-3">
+                <h2 class="flex justify-center items-center font-medium text-xl mb-20 mt-20">Log in to Comment!</h2>
+
+                    <div class="flex justify-center items-center">   
+                    
+                        <a href="{% url 'login' %}"
+                            class="bg-stone-400 text-white py-2 px-4 rounded-md hover:bg-stone-800 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800">
+                            Log In
+                        </a>
+                    
+                    </div>
+
+            </div>
+            {% endif %}
+
+{% endblock %}
