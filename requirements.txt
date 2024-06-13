@@ -131,3 +131,4 @@ yarl==1.9.2
 yt-dlp==2023.12.30
 ytmusicapi==1.4.1
 psycopg2-binary==2.9.1
+setuptools
