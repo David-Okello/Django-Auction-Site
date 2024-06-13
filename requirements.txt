@@ -2,7 +2,5 @@ Django==4.2.7
 asgiref==3.7.2
 sqlparse==0.4.4
 psycopg2-binary==2.9.6
-mysql-connector-python==8.4.0
-django-tailwind==1.5.5
 requests==2.31.0
 gunicorn==21.2.0
