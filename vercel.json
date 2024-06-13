@@ -2,7 +2,7 @@
     "builds": [{
         "src": "commerce/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.12" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.12", "postInstall": "apt-get update && apt-get install -y libpq-dev && pip install -r requirements.txt" }
     }],
     "routes": [
         {
