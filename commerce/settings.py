@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from dotenv import load_dotenv
+import dj_database_url
+from decouple import config
 
 load_dotenv()
 
@@ -94,6 +96,8 @@ DATABASES = {
         'PORT': dbPort,
     }
 }
+
+DATABASES['default'] = dj_database_url.config()
 
 AUTH_USER_MODEL = 'auctions.User'
 
