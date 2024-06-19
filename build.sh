@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+pip --version
 
 # Ensure pip is installed
 python3.9 -m ensurepip --upgrade
